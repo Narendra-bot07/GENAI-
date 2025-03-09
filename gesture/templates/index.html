@@ -105,13 +105,9 @@
             const services = document.getElementById('services');
             const baggageClaim = document.getElementById('baggage-claim');
             const airportMap = document.getElementById('airport-map');
-
-            // Display detailed information when an item is clicked
             function showInfo(item) {
                 alert(`You selected: ${item}`);
             }
-
-            // Add event listeners to menu items
             flightInfo.addEventListener('click', function () {
                 showInfo('Flight Information');
             });
