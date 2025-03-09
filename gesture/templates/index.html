@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesture-Based Airport Information Terminal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        header h1 {
+            font-size: 36px;
+            color: #2a2a2a;
+        }
+        header p {
+            font-size: 18px;
+            color: #666;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            justify-items: center;
+        }
+        .menu-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .menu-item:hover {
+            transform: scale(1.05);
+        }
+        .menu-item p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .icon {
+            width: 50px;
+            height: 50px;
+            background-color: #007BFF;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Airport Information Terminal</h1>
+            <p>Use hand gestures to navigate through the menu options</p>
+        </header>
+        <div class="menu">
+            <div id="flight-info" class="menu-item">
+                <div class="icon"></div>
+                <p>Flight Information</p>
+            </div>
+            <div id="services" class="menu-item">
+                <div class="icon"></div>
+                <p>Services</p>
+            </div>
+            <div id="baggage-claim" class="menu-item">
+                <div class="icon"></div>
+                <p>Baggage Claim</p>
+            </div>
+            <div id="airport-map" class="menu-item">
+                <div class="icon"></div>
+                <p>Airport Map</p>
+            </div>
+        </div>
+        <footer>
+            <p>Powered by Gesture Recognition</p>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const flightInfo = document.getElementById('flight-info');
+            const services = document.getElementById('services');
+            const baggageClaim = document.getElementById('baggage-claim');
+            const airportMap = document.getElementById('airport-map');
+
+            // Display detailed information when an item is clicked
+            function showInfo(item) {
+                alert(`You selected: ${item}`);
+            }
+
+            // Add event listeners to menu items
+            flightInfo.addEventListener('click', function () {
+                showInfo('Flight Information');
+            });
+            services.addEventListener('click', function () {
+                showInfo('Services');
+            });
+            baggageClaim.addEventListener('click', function () {
+                showInfo('Baggage Claim');
+            });
+            airportMap.addEventListener('click', function () {
+                showInfo('Airport Map');
+            });
+        });
+    </script>
+</body>
+</html>
