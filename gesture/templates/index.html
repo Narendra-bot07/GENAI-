@@ -1,116 +1,378 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gesture-Based Airport Information Terminal</title>
+    <title>Airport Information Terminal</title>
     <style>
+        /* General Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
         }
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+
+        /* Navbar Styles */
+        .navbar {
+            width: 60px;
+            height: 100vh;
+            background-color: #2a2a2a;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: width 0.3s ease-in-out;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .navbar:hover {
+            width: 250px; /* Increased width to fit gesture instructions */
+        }
+
+        .navbar ul {
+            list-style-type: none;
             padding: 20px;
         }
+
+        .navbar ul li {
+            margin-bottom: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .navbar:hover ul li {
+            opacity: 1;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar ul li a i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .navbar ul li a:hover {
+            color: #007BFF;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            margin: 4px 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .navbar:hover .hamburger span {
+            opacity: 0;
+        }
+
+        /* Hand Gesture Icon */
+        .hand-gesture-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #fff;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .hand-gesture-icon:hover {
+            color: #007BFF;
+        }
+
+        /* Gesture Instructions */
+        .gesture-instructions {
+            display: none;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .navbar:hover .gesture-instructions {
+            display: block;
+        }
+
+        .gesture-instruction {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gesture-instruction span {
+            font-size: 20px;
+        }
+
+        /* Main Content */
+        .container {
+            flex: 1;
+            margin-left: 60px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+            text-align: center;
+        }
+
+        .container img {
+            display: block;
+            margin: 0 auto;
+            max-width: 35%;
+            height: auto;
+        }
+
+        .navbar:hover ~ .container {
+            margin-left: 250px; /* Adjusted to match navbar width */
+        }
+
         header {
             text-align: center;
             margin-bottom: 50px;
         }
+
         header h1 {
-            font-size: 36px;
+            font-size: 42px;
             color: #2a2a2a;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-in-out;
         }
+
         header p {
             font-size: 18px;
             color: #666;
+            animation: fadeInUp 1s ease-in-out;
         }
+
         .menu {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
             justify-items: center;
+            margin-bottom: 50px;
         }
+
         .menu-item {
             background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 200px;
+            width: 100%;
+            max-width: 200px;
             cursor: pointer;
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
+
         .menu-item:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border: 2px solid #0056b3;
         }
+
         .menu-item p {
             margin-top: 10px;
             font-size: 16px;
+            color: #007BFF;
+            font-weight: bold;
         }
+
         .icon {
             width: 50px;
             height: 50px;
             background-color: #007BFF;
             border-radius: 50%;
             margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            transition: background-color 0.3s ease-in-out;
         }
+
+        .menu-item:hover .icon {
+            background-color: #0056b3;
+            border: 2px solid #1009d5;
+            border-radius: 5px;
+        }
+
+        .content {
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease-in-out;
+            scroll-margin-top: 20px;
+        }
+
+        .content h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #2a2a2a;
+        }
+
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .content img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            margin: 20px 0;
+            animation: zoomIn 0.5s ease-in-out;
+        }
+
+        .content ul {
+            list-style-type: none;
+            margin-top: 10px;
+        }
+
+        .content ul li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
         footer {
             text-align: center;
             margin-top: 50px;
             font-size: 14px;
             color: #888;
+            animation: fadeInUp 1s ease-in-out;
         }
-        .content {
-            display: none;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        .content.active {
-            display: block;
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .content h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .content p {
-            font-size: 16px;
-            line-height: 1.5;
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="hand-gesture-icon">
+            👋
+        </div>
+        <div class="gesture-instructions">
+            <div class="gesture-instruction">
+                <span>👆</span> Cursor Movement (Index Finger Tracking)
+            </div>
+            <div class="gesture-instruction">
+                <span>🤏</span> Click (Pinch Gesture)
+            </div>
+            <div class="gesture-instruction">
+                <span>👍</span> Scroll Up (Thumbs Up)
+            </div>
+            <div class="gesture-instruction">
+                <span>👎</span> Scroll Down (Thumbs Down)
+            </div>
+            <div class="gesture-instruction">
+                <span>👈</span> Swipe Left (Left Arrow Gesture)
+            </div>
+            <div class="gesture-instruction">
+                <span>👉</span> Swipe Right (Right Arrow Gesture)
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
         <header>
             <h1>Airport Information Terminal</h1>
-            <p>Use hand gestures to navigate through the menu options</p>
+            <p>Use hand gestures or click to navigate through the menu options</p>
         </header>
+        <img src="{% static 'images/welcome.jpg' %}" alt="Welcome to the Airport">
+        <br/><br/>
         <div class="menu">
             <div id="flight-info" class="menu-item">
-                <div class="icon"></div>
+                <div class="icon">✈️</div>
                 <p>Flight Information</p>
             </div>
             <div id="services" class="menu-item">
-                <div class="icon"></div>
+                <div class="icon">🛍️</div>
                 <p>Services</p>
             </div>
             <div id="baggage-claim" class="menu-item">
-                <div class="icon"></div>
+                <div class="icon">🧳</div>
                 <p>Baggage Claim</p>
             </div>
             <div id="airport-map" class="menu-item">
-                <div class="icon"></div>
+                <div class="icon">🗺️</div>
                 <p>Airport Map</p>
             </div>
         </div>
@@ -119,61 +381,68 @@
         <div id="flight-info-content" class="content">
             <h2>Flight Information</h2>
             <p>Check real-time updates for your flights, including departure times, gate information, and flight status. You can also get flight delays and cancellations.</p>
+            <img style="margin: auto; margin-top: 20px" src="{% static 'images/flight_info.jpg' %}" alt="Flight Information">
+            <ul>
+                <li><strong>Flight AA123:</strong> Departing at 10:00 AM from Gate 12</li>
+                <li><strong>Flight BA456:</strong> Delayed by 30 minutes</li>
+                <li><strong>Flight CX789:</strong> Boarding at Gate 15</li>
+            </ul>
         </div>
         <div id="services-content" class="content">
             <h2>Services</h2>
             <p>Find out about available services at the airport, such as lounges, Wi-Fi availability, shopping, and dining options. You can also check for lost and found services.</p>
+            <ul>
+                <li><strong>Lounges:</strong> Available in Terminal A and Terminal B</li>
+                <li><strong>Wi-Fi:</strong> Free Wi-Fi available throughout the airport</li>
+                <li><strong>Dining:</strong> Restaurants and cafes located in Terminal C</li>
+            </ul>
         </div>
         <div id="baggage-claim-content" class="content">
             <h2>Baggage Claim</h2>
             <p>Get the latest updates on baggage claim areas, including carousel numbers, lost baggage procedures, and the expected arrival times of your luggage.</p>
+            <img style="margin: auto; margin-top: 20px" src="{% static 'images/baggage.jpg' %}" alt="Baggage Claim">
+            <ul>
+                <li><strong>Flight AA123:</strong> Carousel 3</li>
+                <li><strong>Flight BA456:</strong> Carousel 5</li>
+                <li><strong>Flight CX789:</strong> Carousel 7</li>
+            </ul>
         </div>
         <div id="airport-map-content" class="content">
             <h2>Airport Map</h2>
             <p>View the interactive airport map to navigate terminals, gates, security checks, and other facilities. You can also locate restaurants, shops, and washrooms.</p>
+            <img style="margin: auto; margin-top: 20px" src="{% static 'images/map.jpg' %}" alt="Airport Map">
+            <ul>
+                <li><strong>Terminal A:</strong> Gates 1-10</li>
+                <li><strong>Terminal B:</strong> Gates 11-20</li>
+                <li><strong>Terminal C:</strong> Gates 21-30</li>
+            </ul>
         </div>
 
         <footer>
-            <p></p>
+            <p>&copy; 2023 Airport Information Terminal. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const flightInfo = document.getElementById('flight-info');
-            const services = document.getElementById('services');
-            const baggageClaim = document.getElementById('baggage-claim');
-            const airportMap = document.getElementById('airport-map');
-
-            const flightInfoContent = document.getElementById('flight-info-content');
-            const servicesContent = document.getElementById('services-content');
-            const baggageClaimContent = document.getElementById('baggage-claim-content');
-            const airportMapContent = document.getElementById('airport-map-content');
+            const menuItems = document.querySelectorAll('.menu-item');
+            const contents = document.querySelectorAll('.content');
 
             // Function to show selected content and hide others
-            function showContent(contentToShow) {
-                const contents = [flightInfoContent, servicesContent, baggageClaimContent, airportMapContent];
+            function showContent(targetId) {
                 contents.forEach(content => {
-                    if (content === contentToShow) {
-                        content.classList.add('active');
-                    } else {
-                        content.classList.remove('active');
+                    if (content.id === targetId + '-content') {
+                        content.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 });
             }
 
-            // Event listeners for menu items
-            flightInfo.addEventListener('click', function () {
-                showContent(flightInfoContent);
-            });
-            services.addEventListener('click', function () {
-                showContent(servicesContent);
-            });
-            baggageClaim.addEventListener('click', function () {
-                showContent(baggageClaimContent);
-            });
-            airportMap.addEventListener('click', function () {
-                showContent(airportMapContent);
+            // Add event listeners to menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const targetId = item.id;
+                    showContent(targetId);
+                });
             });
         });
     </script>
