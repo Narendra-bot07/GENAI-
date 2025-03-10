@@ -69,6 +69,25 @@
             font-size: 14px;
             color: #888;
         }
+        .content {
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .content.active {
+            display: block;
+        }
+        .content h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -95,30 +114,66 @@
                 <p>Airport Map</p>
             </div>
         </div>
+        
+        <!-- Content Screens -->
+        <div id="flight-info-content" class="content">
+            <h2>Flight Information</h2>
+            <p>Check real-time updates for your flights, including departure times, gate information, and flight status. You can also get flight delays and cancellations.</p>
+        </div>
+        <div id="services-content" class="content">
+            <h2>Services</h2>
+            <p>Find out about available services at the airport, such as lounges, Wi-Fi availability, shopping, and dining options. You can also check for lost and found services.</p>
+        </div>
+        <div id="baggage-claim-content" class="content">
+            <h2>Baggage Claim</h2>
+            <p>Get the latest updates on baggage claim areas, including carousel numbers, lost baggage procedures, and the expected arrival times of your luggage.</p>
+        </div>
+        <div id="airport-map-content" class="content">
+            <h2>Airport Map</h2>
+            <p>View the interactive airport map to navigate terminals, gates, security checks, and other facilities. You can also locate restaurants, shops, and washrooms.</p>
+        </div>
+
         <footer>
-            <p>Powered by Gesture Recognition</p>
+            <p></p>
         </footer>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const flightInfo = document.getElementById('flight-info');
             const services = document.getElementById('services');
             const baggageClaim = document.getElementById('baggage-claim');
             const airportMap = document.getElementById('airport-map');
-            function showInfo(item) {
-                alert(`You selected: ${item}`);
+
+            const flightInfoContent = document.getElementById('flight-info-content');
+            const servicesContent = document.getElementById('services-content');
+            const baggageClaimContent = document.getElementById('baggage-claim-content');
+            const airportMapContent = document.getElementById('airport-map-content');
+
+            // Function to show selected content and hide others
+            function showContent(contentToShow) {
+                const contents = [flightInfoContent, servicesContent, baggageClaimContent, airportMapContent];
+                contents.forEach(content => {
+                    if (content === contentToShow) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
             }
+
+            // Event listeners for menu items
             flightInfo.addEventListener('click', function () {
-                showInfo('Flight Information');
+                showContent(flightInfoContent);
             });
             services.addEventListener('click', function () {
-                showInfo('Services');
+                showContent(servicesContent);
             });
             baggageClaim.addEventListener('click', function () {
-                showInfo('Baggage Claim');
+                showContent(baggageClaimContent);
             });
             airportMap.addEventListener('click', function () {
-                showInfo('Airport Map');
+                showContent(airportMapContent);
             });
         });
     </script>
