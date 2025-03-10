@@ -37,7 +37,7 @@
         }
 
         .navbar:hover {
-            width: 250px; /* Increased width to fit gesture instructions */
+            width: 200px;
         }
 
         .navbar ul {
@@ -94,49 +94,6 @@
             opacity: 0;
         }
 
-        /* Hand Gesture Icon */
-        .hand-gesture-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            cursor: pointer;
-            font-size: 24px;
-            color: #fff;
-            transition: color 0.3s ease-in-out;
-        }
-
-        .hand-gesture-icon:hover {
-            color: #007BFF;
-        }
-
-        /* Gesture Instructions */
-        .gesture-instructions {
-            display: none;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .navbar:hover .gesture-instructions {
-            display: block;
-        }
-
-        .gesture-instruction {
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .gesture-instruction span {
-            font-size: 20px;
-        }
-
         /* Main Content */
         .container {
             flex: 1;
@@ -154,7 +111,7 @@
         }
 
         .navbar:hover ~ .container {
-            margin-left: 250px; /* Adjusted to match navbar width */
+            margin-left: 200px;
         }
 
         header {
@@ -277,6 +234,71 @@
             animation: fadeInUp 1s ease-in-out;
         }
 
+        /* Gesture Menu Styles */
+        .gesture-menu {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2a2a2a;
+            color: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .gesture-menu:hover {
+            width: 300px;
+            height: auto;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .gesture-menu .gesture-icon {
+            font-size: 24px;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .gesture-menu:hover .gesture-icon {
+            opacity: 0;
+        }
+
+        .gesture-menu .gesture-content {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .gesture-menu:hover .gesture-content {
+            opacity: 1;
+            width: 100%;
+            height: auto;
+        }
+
+        .gesture-content h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .gesture-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .gesture-content ul li {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -325,29 +347,12 @@
             <span></span>
             <span></span>
         </div>
-        <div class="hand-gesture-icon">
-            👋
-        </div>
-        <div class="gesture-instructions">
-            <div class="gesture-instruction">
-                <span>👆</span> Cursor Movement (Index Finger Tracking)
-            </div>
-            <div class="gesture-instruction">
-                <span>🤏</span> Click (Pinch Gesture)
-            </div>
-            <div class="gesture-instruction">
-                <span>👍</span> Scroll Up (Thumbs Up)
-            </div>
-            <div class="gesture-instruction">
-                <span>👎</span> Scroll Down (Thumbs Down)
-            </div>
-            <div class="gesture-instruction">
-                <span>👈</span> Swipe Left (Left Arrow Gesture)
-            </div>
-            <div class="gesture-instruction">
-                <span>👉</span> Swipe Right (Right Arrow Gesture)
-            </div>
-        </div>
+        <ul>
+            <li><a href="#flight-info"><i class="fas fa-plane"></i> Flight Info</a></li>
+            <li><a href="#services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+            <li><a href="#baggage-claim"><i class="fas fa-suitcase"></i> Baggage</a></li>
+            <li><a href="#airport-map"><i class="fas fa-map"></i> Map</a></li>
+        </ul>
     </div>
 
     <!-- Main Content -->
@@ -423,10 +428,25 @@
         </footer>
     </div>
 
+    <!-- Gesture Menu -->
+    <div class="gesture-menu">
+        <div class="gesture-icon">👆</div>
+        <div class="gesture-content">
+            <h3>Gesture Controls</h3>
+            <ul>
+                <li><strong>☝Cursor Movement:</strong> Index Finger Tracking</li>
+                <li><strong>👌Click:</strong> Pinch Gesture</li>
+                <li><strong>👍Scroll Up:</strong> Thumbs Up with Fingers Folded </li>
+                <li><strong>👎Scroll Down:</strong> Thumbs Down with Fingers Folded</li>
+            </ul>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const menuItems = document.querySelectorAll('.menu-item');
             const contents = document.querySelectorAll('.content');
+            const navbarLinks = document.querySelectorAll('.navbar ul li a');
 
             // Function to show selected content and hide others
             function showContent(targetId) {
@@ -441,6 +461,15 @@
             menuItems.forEach(item => {
                 item.addEventListener('click', function () {
                     const targetId = item.id;
+                    showContent(targetId);
+                });
+            });
+
+            // Add event listeners to navbar links
+            navbarLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
                     showContent(targetId);
                 });
             });
